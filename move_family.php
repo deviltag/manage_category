@@ -105,7 +105,7 @@
 </head>
 <body>
 <?php 
-	require("connect_apifamily.php");
+	require("require/connect_apifamily.php");
 	
 	
 
@@ -113,6 +113,9 @@
 	?>
 <div id="header"><h1>header</h1>
 </div>
+
+<br><br><br><br><h1 class="head">ย้ายข้อมูลภายใน Family</h1>
+    <hr class="hr">
 <div id="select">
 
 </div>
@@ -147,7 +150,7 @@ echo "<option value='".$b_result[$b]['code']."' data-value='".$b_result[$b]['tha
 	
 	echo "</select>";
 echo"<div id=begin></div>";
-require("connect_apiDepartment.php");
+require("require/connect_apiDepartment.php");
 ?>
 <script>
 function begin_id(str){
@@ -196,7 +199,7 @@ echo "<option value='".$result[$c]['code']."' data-value='".$result[$c]['thaiNam
 	
 	echo "</select>";
 echo"<div id=to></div>";
-require("connect_apiDepartment.php");
+require("require/connect_apiDepartment.php");
 ?>
 <script>
 function to_id(str){
@@ -228,7 +231,6 @@ i++;
 	
 	<p>
 <div style='clear:both'>
-	<br><hr>
 <form name="show" action="save.php" method="post">
 <div style='display:none'>
 <input type='hidden' name='data1'>
@@ -250,5 +252,7 @@ i++;
 		}
 		}
 </script>
+<div class="back"><a href="index.php" class="back"></a></div>
+
 </body>
 </html>

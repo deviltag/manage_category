@@ -1,7 +1,14 @@
+<?php
+	$api=fopen("itemcode.txt","w");
+		fwrite($api,"000;000");
+		fclose($api);
+
+	$val = "value=''";
+?>
 <!DOCTYPE html>
 <head>
-	<title>jstree basic demos</title>  
-	<link rel="stylesheet" href="dist\themes\default\style.min.css" />
+	<title>Manage Category</title>  
+	<link rel="stylesheet" href="dist/themes/default/style.min.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/bootstrap.css" />
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -9,13 +16,10 @@
 
 </head>
 <body>
-	<?php 
-	if(empty($_GET['id'])){ $get_id ="";}else{$get_id = $_GET['id'];} 		
-	?>
 <div id="header"><h1>header</h1></div>
 <div id="left" class="col-md-3 jstreeleft">
     Search : <input class="search-input form-control search"></input>
-    <div><b>ROOT</b></div>
+    <div><b><a href="#" onClick='return add_family(this)'>ROOT</a></b></div>
 
 
 <div id="jstreeleft">
@@ -23,82 +27,89 @@
 </div>
 </div>
 
-<div id="jstreeright" class="col-md-7 jstreeright">
-   
-	<?php
-	if($get_id != ""){
-			$str = $_GET['id'];
-			$arr = explode(";",$str);
-			$data = explode(":",$arr[1]);
+
+<script>
+function getItem()
+{
+  $.ajax({ 
+        url: "require/connect_apiItem.php" ,
+        type: "POST",
+        data: ''
+      })
+      .success(function(result) { //alert(result) 
+        var obj = jQuery.parseJSON(result);  
+        if(obj==''){
+          all='<h1>Not Items!!</h1>';
+              document.getElementById("content").innerHTML = all
+			  
+        }
+        if(obj!=''){
+          	///all='success';
+          		var id = "";
+          		var name = "";
+          		var unit = "";
+          	var all="<table border='0' width='98%'>";
+          	all+="<tr><th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>หน่วยนับ</th><th>แก้ไข</th><th>ลบ Item</th></tr>";
+          		 $.each(obj, function(key, val) {
+
+          		 	all+="<tr><td align='center'>"+val["itemCode"]+"</td><td>"+val["itemName"]+"</td><td align='center'>"+val["unitCode"]+"</td>";
+          		 	all+="<td align='center'><button id='edit' class='btn btn-warning btn-block' value='"+val["itemCode"];
+          		 	all+="' onClick='return edit_item(this)'>edit</button></td>";
+          		 	all+="<td align='center'><button id='delete' class='btn btn-danger btn-block' value='"+val["itemCode"];
+          		 	all+="' onClick='return delete_item(this)'>delete</button></td></tr>";
+
+          		 });
+          	all+="</table>";
+              document.getElementById("content").innerHTML = all
 			
-			$id= $data[1];
-			$name= $arr[0];
-			$data= $data[0];
+          }
 
-			$data = trim($data);
+      });
+}
+//========= SHOW AND SlELECT REFRESH PAGE AUOT =======================////
+//setInterval(getItem, 1000);   // sec = 1 second
+</script>
 
-		if($data == 'vw_IV_catsubcategory'){
-			echo "Item in Subitem : $id Cate Name: $name";
-			echo "<table border='1' width='100%'>";
-			echo "<tr><th>ID</th><th>Name</th><th>Delete</th></tr>";
-
-		 	$sqlitem =  "select * from bcitem where categorycode = '$id' ORDER BY 'ASC'"; 
-			$item = odbc_exec($connection, $sqlitem);
-
-			while(odbc_fetch_row($item)){
-				$itemid = odbc_result($item, 2);
-				$itemname = odbc_result($item, 3);
-
-			echo "<tr><td>".$itemid."</td><td>".$itemname."</td><td align='center'><button id='delete' class='btn btn-danger btn-block' value='".$itemid."' onClick='return delete_item(this)'>delete</button></td></tr>";
-
-			}
-
-			echo "</table>";
-		}else{
-
-		echo "Category Name: $data";
-		echo "<div id='table'>";
-		echo "<table width=100%>";
-		echo "<tr><th>ID</th><th>Name</th></tr>";
-
-		echo "<tr><td colspan='2' align='center'><h1>Not item</h1></td></tr>";
-
-		echo "</table>";
-		echo "</div>";
-		}
-	}else{
-		echo"<p>ไม่มีข้อมูล</p>";
-	}
-?>
-
+<div id="jstreeright" class="col-md-7 jstreeright">
+	<div id='title'>
+		
+	</div>
+	<div id='content'></div>
 </div>
+
 <div id="menu" class="col-md-2 main">
 	<br>
-<from action='detail_insert.php' method='GET'>
+<form action='insert_from.php' method='GET'>
 	<div class="ltext">
-	<input type='text' name='id' value='<?php echo $_GET['id']; ?>' class="form-control">
+	<input type='hidden' name='id' id='add' class="form-control">
 	</div>
-	<div class="rtext"><button class="btn btn-primary btn-block"> Add </button></div>
+	<div class="rtext"><button type="submit" id="add_button" class="btn btn-primary btn-block" <?php echo $val; ?> > Add </button></div>
 </form>
 <br><br>
-<from action='detail_Move.php' method='GET'>
 	<div class="ltext">
-	<input type='text' name='id' value='<?php echo $_GET['id']; ?>' class="form-control">
+	<input type='hidden' name='id' id='move' class="form-control">
 	</div>
-	<div class="rtext"><button class="btn btn-primary btn-block"> Move </button></div>
+	<div class="rtext"><a href="move_family.php" id="move_button" class="btn btn-primary btn-block" <?php echo $val; ?> > Move </a></div>
+    <br><br>
+<form name="edit" action='edit_form.php' method='GET'>
+	<div class="ltext">
+	<input type='hidden' name='id' id='edit' class="form-control">
+	</div>
+	<div class="rtext"><button type="submit" id="edit_button" class="btn btn-primary btn-block" disabled="disabled" <?php echo $val; ?> > edit </button>
+    </div>
 </form>
 <br><br>
-<from action='delete.php' method='GET'>
+<form action='delete.php' method='GET'>
 	<div class="ltext">
-	<input type='text' name='id' value='<?php echo $_GET['id']; ?>' class="form-control">
+	<input type='hidden' name='id' id='delete' class="form-control">
 	</div>
-	<div class="rtext"><button class="btn btn-primary btn-block">delete</button></div>
+	<div class="rtext"><button type="submit" id="delete_button" class="btn btn-primary btn-block" <?php echo $val; ?> >delete</button></div>
 </form>
 </div>
 <?php
 //============================================ family ============================================================
 echo "<div style='display:none;'>";
-require("connect_apifamily.php");
+require("require/connect_apifamily.php");
 $out_w=json_decode($end,true);
 echo "</div>";
 
@@ -122,7 +133,7 @@ foreach ($out_w as $row) {
 //==========================================================================================================///
 //==================================================== Department =========================================////
     	echo "<div style='display:none;'>";
-		require("connect_apiDepartment.php");
+		require("require/connect_apiDepartment.php");
 		$out_D=json_decode($Depart,true);
 		echo "</div>";
 
@@ -148,7 +159,7 @@ foreach ($out_w as $row) {
 //==============================================================================================================
 //==================================================== category =========================================////
     	echo "<div style='display:none;'>";
-		require("connect_apicategory.php");
+		require("require/connect_apicategory.php");
 		$out_C=json_decode($cate,true);
 		echo "</div>";
 
@@ -174,7 +185,7 @@ foreach ($out_w as $row) {
 //==============================================================================================================
 //==================================================== subcate =========================================////
     	echo "<div style='display:none;'>";
-		require("connect_apisubcate.php");
+		require("require/connect_apisubcate.php");
 		$out_S=json_decode($subcate,true);
 		echo "</div>";
 
@@ -220,20 +231,20 @@ $(function() {
 <?php
 ////============================================  family ======================================================
   for($i=0;$i<$cntf;$i++){
-    echo '{ "id" : "'.$fam['code'][$i].'", "parent" : "#", "text" : "'.$fam['thaiName'][$i].'"},';
+    echo '{ "id" : "family:'.$fam['code'][$i].'", "parent" : "#", "text" : "'.$fam['thaiName'][$i].'"},';
     ////================================================ Department =================================================
     	
 		     for($d=0;$d<$cntD;$d++){
 		     	if($De['parentCode'][$d]==$fam['code'][$i]){
-			    echo '{ "id" : "'.$De['code'][$d].'", "parent" : "'.$fam['code'][$i].'", "text" : "'.$De['thaiName'][$d].'"},';
+			    echo '{ "id" : "Department:'.$De['code'][$d].'", "parent" : "family:'.$fam['code'][$i].'", "text" : "'.$De['thaiName'][$d].'"},';
 				//=============================================== Category  =====================================================	
 					for($c=0;$c<$cntC;$c++){
 				     	if($Ca['parentCode'][$c]==$De['code'][$d]){
-					    echo '{ "id" : "'.$Ca['code'][$c].'", "parent" : "'.$De['code'][$d].'", "text" : "'.$Ca['thaiName'][$c].'"},';
+					    echo '{ "id" : "category:'.$Ca['code'][$c].'", "parent" : "Department:'.$De['code'][$d].'", "text" : "'.$Ca['thaiName'][$c].'"},';
 						    //============================================= subCate =====================================================
 						    for($s=0;$s<$cntS;$s++){
 						     	if($Sub['parentCode'][$s]==$Ca['code'][$c]){
-							    echo '{ "id" : "'.$Sub['code'][$s].'", "parent" : "'.$Ca['code'][$c].'", "text" : "'.$Sub['thaiName'][$s].'"},';
+							    echo '{ "id" : "subcate:'.$Sub['code'][$s].'", "parent" : "category:'.$Ca['code'][$c].'", "text" : "'.$Sub['thaiName'][$s].'"},';
 								}
 							}
 						}
@@ -276,27 +287,78 @@ $(function() {
 
 $('#jstreeleft')
   // listen for event
-  .on('select_node.jstree', function (e, data) {
+ .on('select_node.jstree', function (e, data) {
 
-    var i, j, r = [], s = [];t = [];
-    for(i = 0, j = data.selected.length; i < j; i++) {
-     r.push(data.instance.get_node(data.selected[i]).text);
-      r.push(data.instance.get_node(data.selected[i]).id);
-	  s.push(data.instance.get_node(data.selected[i]).id);
+    var x, j, i = [], p = [];t = [];
+    for(x = 0, j = data.selected.length; x < j; x++) {
+    t.push(data.instance.get_node(data.selected[x]).text);
+    i.push(data.instance.get_node(data.selected[x]).id);
+	p.push(data.instance.get_node(data.selected[x]).parent);
 	  
       //r.push(data.instance.get_node(data.selected[i]).parent);
     }
+    var idf = i.join().split(":");
+    var id=t.join()+";"+idf[1]+";"+p.join();
+
+
+   /* alert(t.join())
+    alert(i.join())
+    alert(p.join())*/
+
+  $.ajax({
+  method: "POST",
+  url: "require/itemselect.php",
+  data: { id: id}
+})
+  .done(function( msg ) {
+    var str = msg;
+    var title = i.join().split(":");
+    var parent = p.join().split(":");
+    var content = "#"+title[0]+";#"+title[1]+";"+t.join()+";."+parent[0]+";."+parent[1];
+    $('#title').html('<h3>หมวดหมู่ '+t.join()+' รหัส '+title[1]+'</h3>');
+	
+   
+   document.getElementById("add").value = content;
+   document.getElementById("move").value = content;
+   document.getElementById("edit").value = i.join();
+   document.getElementById("delete").value = i.join();
+   
+	var edit = document.forms["edit"]["id"].value
+	if(edit == null || edit == ""){document.getElementById("edit_button").disabled = true;}
+   else{document.getElementById("edit_button").disabled = false;}
+   getItem()
+
+    //alert(str)
+  });
 	//alert(r.join())
 	//alert(s.join())
-    //document.getElementById("xxx").value = r.join(', ');
    
-  window.location="jstreeview.php?id="+r.join('; ')+"&pid="+s.join();  
+   
+ //window.location="require/itemselect.php";//?id="+r.join('; ')+"&pid="+s.join();  
   });
 
   function delete_item(str){
-	alert(str.value)
-	
+	//alert(str.value)
+	window.location="delete.php?level=items&code="+str.value;
 	}
+  function edit_item(str){
+	//alert(str.value)
+	window.location="edit_form.php?level=items&code="+str.value;
+	}
+ function add_family(str){
+ 	  $.ajax({
+  method: "POST",
+  url: "require/itemselect.php",
+  data: { id: ""}
+})
+ 	$('#title').html('<h1>Root</h1>');
+ 	$('#content').html('<h1>Root Add family</h1>');
+ 	document.getElementById("move").value = "";
+	document.getElementById("delete").value = "";
+	document.getElementById("edit").value = "";
+	document.getElementById("add").value = "#root;#disable;disable;.disable;.disable";
+}
 	</script>
+<div class="setup"><a href="setting/setting.php" class="setup"></a></div>
 </body>
 </html>

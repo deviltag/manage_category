@@ -9,6 +9,11 @@
 <body>
 <?php 
 header('Content-type: application/json;charset=utf-8');
+
+
+$myfile = fopen("setting/move.txt","r") or die("Unable to open file!");
+$urlmove = fgets($myfile);
+fclose($myfile);
 //====================================== ITEM =============================================
 if(isset($_GET['code']) && $_GET['code']!=""){  
     $item= $_GET['code']; // ตัวอย่าง  
@@ -51,7 +56,7 @@ $data_string = json_encode($data);
 //echo var_dump(json_decode($data_string));
 //echo $data_string;  
 $t_ch = curl_init();
-curl_setopt($t_ch, CURLOPT_URL,"http://192.168.0.250:8080/NPCateWS/category/move");
+curl_setopt($t_ch, CURLOPT_URL,$urlmove);
 curl_setopt($t_ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($t_ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($t_ch, CURLOPT_POST, true);

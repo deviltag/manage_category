@@ -104,7 +104,7 @@
 </head>
 <body>
 <?php 
-	require("connect_apiDepartment.php");
+	require("require/connect_apiDepartment.php");
 	
 	
 
@@ -112,6 +112,10 @@
 	?>
 <div id="header"><h1>header</h1>
 </div>
+
+<br><br><br><br><h1 class="head">ย้ายข้อมูลภายใน Department</h1>
+<hr class="hr">
+ 
 <div id="select">
 
 </div>
@@ -146,7 +150,7 @@ echo "<option value='".$b_result[$b]['code']."' data-value='".$b_result[$b]['tha
 	
 	echo "</select>";
 echo"<div id=begin></div>";
-require("connect_apicategory.php");
+require("require/connect_apicategory.php");
 ?>
 <script>
 function begin_id(str){
@@ -192,7 +196,7 @@ echo "<option value='".$result[$t]['code']."' data-value='".$result[$t]['thaiNam
 	
 	echo "</select>";
 echo"<div id=to></div>";
-require("connect_apicategory.php");
+require("require/connect_apicategory.php");
 ?>
 <script>
 function to_id(str){
@@ -216,21 +220,17 @@ i++;
 }
                     </script>
 	</div></div>
-	<p>
 
+<div id="show_data" style="clear:both;"></div>
 
-<div id="show_data" style="clear:both;"></div><br>
-
-	
-	<p>
 <div style='clear:both'>
-	<br><hr>
 <form name="show" action="save.php" method="post">
 <div style='display:none'>
 <input type='hidden' name='data1'>
 <input type='hidden' name='data2'></div>
 <input type='hidden' value="save"  class="btn btn-success">
 </form>
+
 </div>
 </div>
 <script>
@@ -246,5 +246,7 @@ i++;
 		}
 		}
 </script>
+<div class="back"><a href="index.php" class="back"></a></div>
+
 </body>
 </html>

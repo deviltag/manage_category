@@ -1,26 +1,12 @@
 <?php
-/**
- *  Example API call
- *  Create a new profile in a database
- */
-// the databaseID
-//$databaseID = 1;
-/*$linkOld = "data_linkAPI/link_api.txt";
-	$lopen = fopen($linkOld, 'r');     
-    $linkO = fgets($lopen, 4096);    
-    fclose($lopen); */
+$myfile = fopen("setting/category.txt","r") or die("Unable to open file!");
+$urlcategory = fgets($myfile);;
+fclose($myfile);
 
-/*$data = array (
-	"keyword" => "",
-	"accessToken" => "58a452bc-2504-4d51-817c-9b75b1136c0c"
-	);*/
-// json encode data
-//$data_string = json_encode($data); 
-// the token
 $token = 'your token here';
 // set up the curl resource
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,"http://192.168.0.250:8080/NPCateWS/category/subcat");//http://s01xp.dyndns.org:8080/SmartQWs/pickup/search");
+curl_setopt($ch, CURLOPT_URL,$urlcategory);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POST, true);
@@ -35,10 +21,10 @@ $output = curl_exec($ch);
 // output the profile information - includes the header
 //echo $output."<br>";
 //$sub = substr($output,9);
-$subcate = "[";
+$cate = "[";
 $sub = explode("[",$output);
-$subcate .= substr($sub[1],0,-1);
-//echo $subcate;
+$cate .= substr($sub[1],0,-1);
+//echo $cate;
 
 
 ?>

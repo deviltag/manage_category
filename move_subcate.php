@@ -132,16 +132,23 @@
 </head>
 <body onLoad="items()">
 <?php 
+
+$myfile = fopen("setting/items.txt","r") or die("Unable to open file!");
+$urlitems = fgets($myfile);;
+fclose($myfile);
+
 if(!empty($_GET['t_select'])){
-$t_select=$_GET['t_select'];}else{$t_select="";}
+$t_select=$_GET['t_select'];}else{$t_select="0";}
 
 if(!empty($_GET['b_select'])){
-$b_select=$_GET['b_select'];}else{$b_select="";}
-	require("connect_apisubcate.php");
+$b_select=$_GET['b_select'];}else{$b_select="0";}
+	require("require/connect_apisubcate.php");
 	
 	?>
 <div id="header"><h1>header</h1>
 </div>
+<br><br><br><br><h1 class="head">ย้ายข้อมูลภายใน Sub-Category</h1>
+    <hr class="hr">
 <div id="select">
 
 </div>
@@ -187,7 +194,7 @@ $b_data = array (
 	);
 $b_data_string = json_encode($b_data); 
 $b_ch = curl_init();
-curl_setopt($b_ch, CURLOPT_URL,"http://192.168.0.250:8080/NPCateWS/category/itemcatch");
+curl_setopt($b_ch, CURLOPT_URL,$urlitems);
 curl_setopt($b_ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($b_ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($b_ch, CURLOPT_POST, true);
@@ -242,7 +249,7 @@ $t_data = array (
 	);
 $t_data_string = json_encode($t_data); 
 $t_ch = curl_init();
-curl_setopt($t_ch, CURLOPT_URL,"http://192.168.0.250:8080/NPCateWS/category/itemcatch");
+curl_setopt($t_ch, CURLOPT_URL,$urlitems);
 curl_setopt($t_ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($t_ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($t_ch, CURLOPT_POST, true);
@@ -261,13 +268,10 @@ $t_item .= substr($t_sub[1],0,-1);
 ?>
 
 	</div></div>
-	<p>
 
 
-<br><br><br><br><br><div id="show_data" style="clear:both;"></div><br>
-
-	<p>
-<div style='clear:both'><hr>
+<div id="show_data" style="clear:both;"></div>
+<div style='clear:both'>
 <form name="test" action="save_subcate.php" method="post">
 <input type='hidden' name='data1' id="data1">
 <input type='hidden' name='data2' id="data2">
@@ -343,5 +347,7 @@ t++;
 	}	  
 
                     </script>
+<div class="back"><a href="index.php" class="back"></a></div>
+
 </body>
 </html>

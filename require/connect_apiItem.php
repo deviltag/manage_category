@@ -5,21 +5,28 @@
  */
 // the databaseID
 //$databaseID = 1;
-/*$linkOld = "data_linkAPI/link_api.txt";
+//echo "<meta charset='utf-8'>";
+$linkOld = "itemcode.txt";
 	$lopen = fopen($linkOld, 'r');     
-    $linkO = fgets($lopen, 4096);    
-    fclose($lopen); */
-
+    $link = fgets($lopen, 4096);    
+    fclose($lopen); 
+    if(empty($link)){ $link='""';}else{$link=$link;}
+    $id = explode(";", $link);
+	$id1= $id[1];
 $data = array (
-	"subCatCode" => "954"
+	"subCatCode" => $id1
 	);
+$myfile = fopen("../setting/items.txt","r") or die("Unable to open file!");
+$urlitems = fgets($myfile);;
+fclose($myfile);
+
 // json encode data
 $data_string = json_encode($data); 
 // the token
 $token = 'your token here';
 // set up the curl resource
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,"http://192.168.0.250:8080/NPCateWS/category/itemcatch");//http://s01xp.dyndns.org:8080/SmartQWs/pickup/search");
+curl_setopt($ch, CURLOPT_URL,$urlitems);//http://s01xp.dyndns.org:8080/SmartQWs/pickup/search");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($ch, CURLOPT_POST, true);
@@ -35,9 +42,9 @@ $output = curl_exec($ch);
 //echo $output."<br>";
 //$sub = substr($output,9);
 $item = "[";
-$sub = explode("[",$output);
+$sub = explode(":[",$output);
 $item .= substr($sub[1],0,-1);
-//echo $item;
+echo $item;
 
 
 ?>
