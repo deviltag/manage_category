@@ -8,13 +8,13 @@ html {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
-        background: #38ACEC;
+		background: #393939;
         color: #FFF;
 }
-}
+
 body {
   margin: 0;
-  background: #38ACEC;
+  background: #393939;
   color: #FFF;
 }
 article,
@@ -1090,7 +1090,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-   background: #38ACEC;
+   background: #393939;
         color: #FFF;
 }
 input,

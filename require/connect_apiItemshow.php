@@ -1,24 +1,8 @@
 <?php
-/**
- *  Example API call
- *  Create a new profile in a database
- */
-// the databaseID
-//$databaseID = 1;
-//echo "<meta charset='utf-8'>";
-	/*$linkOld = "itemcode.txt";
-	$lopen = fopen($linkOld, 'r');     
-    $link = fgets($lopen, 4096);    
-    fclose($lopen); 
-    if(isset($link)){$link=$link;
-	$id = explode(";", $link);
-	$id1= $id[1];
-	}else 
-	*/
-	if(isset($_GET['xxx'])){
-		$id1=$_GET['xxx'];
+
+	if(isset($_GET['getid'])){
+		$id1=$_GET['getid'];
 	}
-echo $id1;
 	
 $data = array (
 	"search" => "",
@@ -51,7 +35,27 @@ $output = curl_exec($ch);
 $item = "[";
 $sub = explode(":[",$output);
 $item .= substr($sub[1],0,-1);
-//echo $item;
+$out=json_decode($item,true);
+$result = array();
 
+echo"<table border='0' width='100%'>";
+echo"<tr><th>รหัสสินค้า</th><th>ชื่อสินค้า</th><th>หน่วยนับ</th></tr>";
+foreach ($out as $row) {
+  $result[$row['itemCode']]['itemCode'] = $row['itemCode'];
+  $result[$row['itemCode']]['itemName'] = $row['itemName'];
+  $result[$row['itemCode']]['unitCode'] = $row['unitCode'];
+ 
+}
+  $result = array_values($result);
+
+      
+$bnt=count($result);
+$b_dd = array_values($result);
+for($b=0;$b<$bnt;$b++){
+	
+echo"<tr><td>".$result[$b]['itemCode']." </td><td>".$result[$b]['itemName']."</td><td>".$result[$b]['unitCode']."</td></tr>";
+}
+
+echo "</table>";
 
 ?>

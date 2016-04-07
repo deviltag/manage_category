@@ -1,7 +1,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="ProgId" content="FrontPage.Editor.Document">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-874">
 <title>Setting link api</title>
 <link rel="stylesheet" href="../css/style.css">
@@ -9,8 +8,7 @@
 </head>
 
 <body>
-<div id="header"><h1>header</h1>
-</div>
+<div id="header"><h1 class="hleft"> Manage Category</h1></div>
 <div class="main">
 <?php
 $myfile1 = fopen("family.txt","r") or die("Unable to open file!");
